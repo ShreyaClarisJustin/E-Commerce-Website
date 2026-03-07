@@ -4,46 +4,112 @@ const User = require("../models/User");
 // =========================
 // CREATE PRODUCT (Student Only)
 // =========================
+// exports.createProduct = async (req, res) => {
+//   try {
+//     const { name, description, price, category, condition, quantity, campus, location, images } = req.body;
+
+//     // Validate required fields
+//     if (!name || !description || !price || !category || !campus) {
+//       return res.status(400).json({ 
+//         message: "Please provide all required fields: name, description, price, category, campus" 
+//       });
+//     }
+
+//     // Verify user's campus matches request
+//     if (campus !== req.user.campus) {
+//       return res.status(403).json({ 
+//         message: "You can only create products for your own campus" 
+//       });
+//     }
+
+//     const product = await Product.create({
+//       name,
+//       description,
+//       price,
+//       category,
+//       condition: condition || "Good",
+//       quantity: quantity || 1,
+//       campus,
+//       location,
+//       images: images || [],
+//       sellerId: req.user.id,
+//       status: "Available"
+//     });
+
+//     await product.populate("sellerId", "name email");
+
+//     res.status(201).json({
+//       message: "Product created successfully",
+//       product
+//     });
+
+//   } catch (error) {
+//     res.status(500).json({ message: "Error creating product", error: error.message });
+//   }
+// };
+
+
+
+
+
+
+
+
+
 exports.createProduct = async (req, res) => {
   try {
-    const { name, description, price, category, condition, quantity, campus, location, images } = req.body;
+    console.log("req.user:", req.user);
+    console.log("req.body:", req.body);
+    console.log("req.files:", req.files);
+    const {
+      name,
+      category,
+      price,
+      quantity,
+      condition,
+      campus,
+      description
+    } = req.body;
+    const images = req.files && req.files.length > 0? req.files.map((file) => `/uploads/${file.filename}`) : [];
 
-    // Validate required fields
     if (!name || !description || !price || !category || !campus) {
-      return res.status(400).json({ 
-        message: "Please provide all required fields: name, description, price, category, campus" 
+      return res.status(400).json({
+        message: "Please provide all required fields: name, description, price, category, campus",
+      });
+    }
+if (!req.user) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+    if (campus !== req.user.campus) {
+      return res.status(403).json({
+        message: "You can only create products for your own campus",
       });
     }
 
-    // Verify user's campus matches request
-    if (campus !== req.user.campus) {
-      return res.status(403).json({ 
-        message: "You can only create products for your own campus" 
-      });
-    }
+    // If images were uploaded
 
     const product = await Product.create({
       name,
-      description,
-      price,
       category,
+      price,
+      quantity,
       condition: condition || "Good",
-      quantity: quantity || 1,
       campus,
-      location,
-      images: images || [],
-      sellerId: req.user.id,
-      status: "Available"
+      description,
+      // location,
+      images,
+      sellerId: req.user._id,
+      // status: "Available",
     });
+   res.status(201).json(product);
+    // await product.populate("sellerId", "name email");
 
-    await product.populate("sellerId", "name email");
-
-    res.status(201).json({
-      message: "Product created successfully",
-      product
-    });
-
+    // res.status(201).json({
+    //   message: "Product created successfully",
+    //   product,
+    // });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Error creating product", error: error.message });
   }
 };
@@ -234,5 +300,71 @@ exports.likeProduct = async (req, res) => {
 
   } catch (error) {
     res.status(500).json({ message: "Error liking product", error: error.message });
+  }
+};
+
+
+
+exports.getMyProducts = async (req, res) => {
+  try {
+    const products = await Product.find({ sellerId: req.user.id })
+      .populate("sellerId", "name email")
+      .sort({ createdAt: -1 });
+
+    res.json({
+      count: products.length,
+      products
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching your products" });
+  }
+};
+// exports.getMyProducts = async (req, res) => {
+//   try {
+//     const products = await Product.find({ sellerId: req.user.id });
+//     res.json(products);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
+
+
+exports.markAsSold = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    product.status = "Sold";
+
+    await product.save();
+
+    res.json({
+      message: "Product marked as sold",
+      product
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Error updating product status" });
+  }
+};
+
+exports.getAllProductsAdmin = async (req, res) => {
+  try {
+    const products = await Product.find()
+      .populate("sellerId", "name email campus")
+      .sort({ createdAt: -1 });
+
+    res.json({
+      count: products.length,
+      products
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching products" });
   }
 };

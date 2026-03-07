@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema({
   category: { 
     type: String, 
     required: true,
-    enum: ["Books", "Electronics", "Clothing", "Furniture", "Sports", "Notes", "Other"],
+    enum: ["Books", "Electronics", "Clothing", "Furniture", "Sports", "Notes", "Other","Lab Equipment"],
     index: true
   },
   condition: {
@@ -47,7 +47,8 @@ const productSchema = new mongoose.Schema({
     index: true
   },
   images: [{
-    type: String,
+    type: [String],
+    default:[],
     description: "URLs of product images"
   }],
   status: {

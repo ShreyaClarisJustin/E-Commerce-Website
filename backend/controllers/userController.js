@@ -424,3 +424,55 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ message: "Failed to delete user", error: error.message });
   }
 };
+
+// =========================
+// CHECK USER (Verify logged-in user)
+// =========================
+exports.checkUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      message: "User verified",
+      isAuthenticated: true,
+      user
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Failed to verify user", error: error.message });
+  }
+};
+
+// =========================
+// CHECK ADMIN (Verify if user is admin)
+// =========================
+exports.checkAdmin = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isAdmin = user.role === "admin";
+
+    res.json({
+      message: "Admin status checked",
+      isAdmin,
+      role: user.role,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Failed to check admin status", error: error.message });
+  }
+};
