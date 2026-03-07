@@ -389,7 +389,7 @@ College Email
 
 <input
 type="email"
-placeholder="example@campus.edu"
+placeholder="example@campus.ac.in"
 className="w-full border p-3 rounded-lg"
 onChange={(e)=>setEmail(e.target.value)}
 />
