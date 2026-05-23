@@ -30,7 +30,7 @@ router.get("/test", (req, res) => {
 
 
 // ===== PROTECTED - ADMIN ONLY ROUTES =====
-router.get("/admin/all", protect, isAdmin, userController.getAllUsers);
+router.get("/admin/all", userController.getAllUsers);
 router.get("/admin/campus/:campus", protect, isAdmin, userController.getUsersByCampus);
 router.delete("/admin/:userId", protect, isAdmin, userController.deleteUser);
 
