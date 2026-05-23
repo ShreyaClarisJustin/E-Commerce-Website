@@ -225,7 +225,7 @@ const token = localStorage.getItem("token")
 
       images.forEach((img) => formData.append("images", img));
 
-      const res=await axios.post("http://localhost:5000/api/products", formData, {
+      const res=await axios.post("https://backend-i1xf.onrender.com/api/products", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",

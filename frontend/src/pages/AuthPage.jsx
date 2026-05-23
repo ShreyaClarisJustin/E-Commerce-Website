@@ -184,6 +184,7 @@ import { useNavigate } from "react-router-dom"
 import loginreg from "../assets/loginreg.png"
 
 function AuthPage(){
+  console.log("NEW CODE RUNNING")   
 
 const navigate = useNavigate()
 
@@ -202,7 +203,7 @@ const handleLogin = async () => {
   try{
 
     const res = await axios.post(
-      "http://localhost:5000/api/users/login",
+      "https://backend-i1xf.onrender.com/api/users/login",
       {
         email,
         password
@@ -237,10 +238,12 @@ return
 
 }
 
+console.log("FORM DATA:", name, email, password, campus)
+
 try{
 
 const res = await axios.post(
-"http://localhost:5000/api/users/signup",
+"https://backend-i1xf.onrender.com/api/users/signup",
 {
 name,
 email,
@@ -255,11 +258,8 @@ setIsLogin(true)
 
 }
 catch(error){
-
-console.error(error)
-
-alert("Registration failed")
-
+  console.log(error.response?.data)
+  alert(error.response?.data?.message || "Registration failed")
 }
 
 }
@@ -366,9 +366,10 @@ onChange={(e)=>setCampus(e.target.value)}
 >
 
 <option value="">Select Campus</option>
-<option>North Campus</option>
-<option>South Campus</option>
-<option>Main Campus</option>
+<option value="North Campus">North Campus</option>
+<option value="South Campus">South Campus</option>
+<option value="East Campus">East Campus</option>
+<option value="West Campus">West Campus</option>
 
 </select>
 

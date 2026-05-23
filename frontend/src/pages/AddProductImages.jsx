@@ -19,7 +19,7 @@ function AddProductImages({ productId }) {
 
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/products/add-images/${productId}`,
+        `https://backend-i1xf.onrender.com/api/products/add-images/${productId}`,
         formData,
         {
           headers: {

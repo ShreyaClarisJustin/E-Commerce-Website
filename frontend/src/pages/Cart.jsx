@@ -87,7 +87,7 @@ function Cart() {
         cartItems.map((item) => (
           <div key={item._id} className="flex justify-between items-center border-b py-4">
             <div className="flex gap-4 items-center">
-              <img src={`http://localhost:5000/${item.images[0]}`} className="w-16 h-16 object-cover rounded" />
+              <img src={`https://backend-i1xf.onrender.com/${item.images[0]}`} className="w-16 h-16 object-cover rounded" />
               <div>
                 <p className="font-bold">{item.name}</p>
                 <p className="text-gray-500">${item.price}</p>

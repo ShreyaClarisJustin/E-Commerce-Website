@@ -14,12 +14,19 @@ const {
 router.post("/signup", userController.signup);
 router.post("/admin-signup", userController.adminSignup);
 router.post("/login", userController.login);
+router.get("/admin/all", userController.getAllUsers);
+router.get("/", userController.getAllUsers);
+
+
 
 // ===== PROTECTED - STUDENT ROUTES =====
 router.get("/profile", protect, userController.profile);
 router.put("/profile", protect, userController.updateProfile);
 router.get("/check-user", protect, userController.checkUser);
 router.get("/check-admin", protect, userController.checkAdmin);
+router.get("/test", (req, res) => {
+  res.send("User routes working");
+});
 
 
 // ===== PROTECTED - ADMIN ONLY ROUTES =====

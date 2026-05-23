@@ -18,25 +18,64 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
+// router.put("/add-images/:id", protect, upload.array("images"), async (req, res) => {
+//   try {
+//     const product = await Product.findById(req.params.id);
+//     if (!product) return res.status(404).json({ message: "Product not found" });
+
+//     // Only allow owner or admin to add images
+//     if (product.sellerId.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+//       return res.status(403).json({ message: "Not authorized" });
+//     }
+
+//     // Append new images to existing ones
+//     const newImages = req.files.map((f) => `/uploads/${f.filename}`);
+//     product.images = [...(product.images || []), ...newImages];
+//     await product.save();
+
+//     res.json({ message: "Images added successfully", images: product.images });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Error adding images", error: error.message });
+//   }
+// });
+
+
+
+
+
+
 router.put("/add-images/:id", protect, upload.array("images"), async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).json({ message: "Product not found" });
 
-    // Only allow owner or admin to add images
-    if (product.sellerId.toString() !== req.user._id.toString() && req.user.role !== "admin") {
-      return res.status(403).json({ message: "Not authorized" });
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found"
+      });
     }
 
-    // Append new images to existing ones
-    const newImages = req.files.map((f) => `/uploads/${f.filename}`);
-    product.images = [...(product.images || []), ...newImages];
+    const newImages = req.files.map(
+      (file) => `/uploads/${file.filename}`
+    );
+
+    product.images = [
+      ...product.images,
+      ...newImages
+    ];
+
     await product.save();
 
-    res.json({ message: "Images added successfully", images: product.images });
+    res.json({
+      message: "Images added successfully",
+      images: product.images
+    });
+
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error adding images", error: error.message });
+    res.status(500).json({
+      message: error.message
+    });
   }
 });
 

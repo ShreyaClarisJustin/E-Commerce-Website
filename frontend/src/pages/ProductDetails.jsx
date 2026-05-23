@@ -230,7 +230,7 @@ function ProductDetails() {
     const fetchProduct = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(`http://localhost:5000/api/products/single/${id}`, {
+        const res = await axios.get(`https://backend-i1xf.onrender.com/api/products/single/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setProduct(res.data);
@@ -268,13 +268,13 @@ function ProductDetails() {
           {/* LEFT: IMAGES */}
           <div>
             <img
-              src={`http://localhost:5000/${product.images[0]}`}
+              src={`https://backend-i1xf.onrender.com/${product.images[0]}`}
               alt={product.name}
               className="w-full h-[400px] object-cover rounded-xl mb-4"
             />
             <div className="flex gap-2">
               {product.images.map((img, idx) => (
-                <img key={idx} src={`http://localhost:5000/${img}`} className="w-20 h-20 object-cover rounded-md border" />
+                <img key={idx} src={`https://backend-i1xf.onrender.com/${img}`} className="w-20 h-20 object-cover rounded-md border" />
               ))}
             </div>
           </div>

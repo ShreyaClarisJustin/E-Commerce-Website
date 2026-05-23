@@ -7,7 +7,7 @@ const [products,setProducts] = useState([])
 
 useEffect(()=>{
 
-axios.get("http://localhost:5000/api/products")
+axios.get("https://backend-i1xf.onrender.com/api/products")
 .then((res)=>{
   console.log(res.data);
 setProducts(res.data.products)
@@ -318,10 +318,10 @@ className="w-full h-48 object-cover rounded-t-xl"
 
 <img
   src={product.images && product.images.length > 0 
-    ? `http://localhost:5000${product.images[0]}`
+    ? `https://backend-i1xf.onrender.com${product.images[0]}`
     : "https://via.placeholder.com/300"}
   alt={product.name}
-  className="w-full h-48 object-cover rounded-t-xl"
+  className="w-full h-98 object-cover rounded-t-xl"
 />
 
 <div className="p-4">
