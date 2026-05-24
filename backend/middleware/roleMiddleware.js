@@ -11,13 +11,16 @@ exports.isAdmin = (req, res, next) => {
   next();
 };
 
-// Middleware to check if user is a student
+// Middleware to check if user is a student (allows both students and admins)
 exports.isStudent = (req, res, next) => {
   if (!req.user) {
     return res.status(401).json({ message: "Not authorized" });
   }
 
-  if (req.user.role !== "student") {
+  // Allow students and admins to create products
+  // Only block if explicitly set to a non-allowed role
+  const allowedRoles = ["student", "admin"];
+  if (req.user.role && !allowedRoles.includes(req.user.role)) {
     return res.status(403).json({ message: "Access denied. Student only" });
   }
 
